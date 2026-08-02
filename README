@@ -1,0 +1,17 @@
+# Proyecto de Clasificación con Regresión Logística — Actividad Calificable 1
+
+Este repositorio contiene el desarrollo completo (fases inicial e intermedia) de la **Actividad Calificable 1** para la asignatura de **Aprendizaje Automático**.
+
+El objetivo del proyecto es construir un flujo de trabajo de Machine Learning (*end-to-end*) utilizando un modelo de **Regresión Logística** sobre un dataset de marketing bancario, para predecir la suscripción de depósitos a término fijo y apoyar la toma de decisiones.
+
+## 📁 Entregables del Proyecto
+
+1. **Memoria Técnica (PDF):** Documentación detallada del proyecto y resultados.
+2. **Notebook Executable:** Código en Python desarrollado y documentado en Google Colab.
+3. **Vídeo de Sustentación:** Presentación ejecutiva del proyecto (5 a 8 minutos).
+
+## 🛠️ Tecnologías Utilizadas
+
+* **Lenguaje:** Python 3.x
+* **Entorno:** Google Colab / Jupyter Notebooks
+* **Librerías principales:** `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`
