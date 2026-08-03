@@ -1,17 +1,61 @@
-# Proyecto de Clasificación con Regresión Logística — Actividad Calificable 1
+# 🏦 Clasificación con Regresión Logística — Marketing Bancario
 
-Este repositorio contiene el desarrollo completo (fases inicial e intermedia) de la **Actividad Calificable 1** para la asignatura de **Aprendizaje Automático**.
+Este repositorio contiene el desarrollo completo (*fases inicial e intermedia*) de un proyecto de Machine Learning end-to-end basado en **Regresión Logística**. El objetivo principal es construir un modelo predictivo robusto dentro de un `Pipeline` para estimar la probabilidad de que un cliente contrate un **depósito a término fijo** y apoyar la toma de decisiones comerciales estratégicas.
 
-El objetivo del proyecto es construir un flujo de trabajo de Machine Learning (*end-to-end*) utilizando un modelo de **Regresión Logística** sobre un dataset de marketing bancario, para predecir la suscripción de depósitos a término fijo y apoyar la toma de decisiones.
+---
 
-## 📁 Entregables del Proyecto
+## 👥 Integrantes del Proyecto
+* **Luis Fernando Betancurt Betancourt**
+* **Alejandro Ramírez Marín**
 
-1. **Memoria Técnica (PDF):** Documentación detallada del proyecto y resultados.
-2. **Notebook Executable:** Código en Python desarrollado y documentado en Google Colab.
-3. **Vídeo de Sustentación:** Presentación ejecutiva del proyecto (5 a 8 minutos).
+* **Programa:** Especialización en Ciencia de Datos e Inteligencia Artificial
+* **Institución:** Universidad de Medellín
+* **Asignatura:** Aprendizaje Automático / Machine Learning
 
-## 🛠️ Tecnologías Utilizadas
+---
 
-* **Lenguaje:** Python 3.x
-* **Entorno:** Google Colab / Jupyter Notebooks
-* **Librerías principales:** `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`
+## 📌 Entregables del Proyecto (33.33% c/u)
+
+1. **Memoria Técnica (PDF):** Documento formal con la justificación del modelo, preprocesamiento, análisis de fuga de datos y evaluación de escenarios prácticos de negocio.
+2. **Notebook Ejecutable:** Código en Python estructurado, documentado y listo para correr en Google Colab (`ActividadClasificacion.ipynb`).
+3. **Vídeo de Sustentación:** Presentación ejecutiva continua (duración 5-8 minutos) con cámara encendida por parte de los integrantes.
+
+---
+
+## 📊 Descripción del Dataset
+
+* **Fuente:** [Kaggle - Bank Marketing Dataset](https://www.kaggle.com/datasets/janiobachmann/bank-marketing-dataset/data)
+* **Volumen:** 11,162 registros y 17 columnas.
+* **Variable Objetivo ($y$):** `deposit` (`1` = Suscribió el depósito / `yes`, `0` = No suscribió / `no`).
+* **Predictores ($X$):**
+  * **Variables Numéricas (7):** `age`, `balance`, `day`, `duration`, `campaign`, `pdays`, `previous`.
+  * **Variables Categóricas (9):** `job`, `marital`, `education`, `default`, `housing`, `loan`, `contact`, `month`, `poutcome`.
+* **Tratamiento de Nulos Implícitos:** Reemplazo de la etiqueta textual `"unknown"` por `np.nan` en columnas como `job` (70 nulos), `education` (497 nulos), `contact` (2,346 nulos) y `poutcome` (8,326 nulos).
+
+---
+
+## ⚙️ Arquitectura del Pipeline y Preprocesamiento
+
+Para prevenir estrictamente la **fuga de datos (*data leakage*)**, se realizó primero la división del dataset en 80% entrenamiento (`X_train`) y 20% prueba (`X_test`) con estratificación (`stratify=y`). 
+
+Posteriormente, se encapsuló todo el preprocesamiento mediante un `ColumnTransformer`:
+
+```text
+                        ┌────────────────────────────────────────┐
+                        │        Pipeline Principal (bankPipeline)│
+                        └───────────────────┬────────────────────┘
+                                            │
+               ┌────────────────────────────┴────────────────────────────┐
+               ▼                                                         ▼
+  ┌───────────────────────────┐                             ┌───────────────────────────┐
+  │   Rama Numérica (7 cols)  │                             │  Rama Categórica (9 cols) │
+  ├───────────────────────────┤                             ├───────────────────────────┤
+  │ 1. SimpleImputer(median)  │                             │ 1. SimpleImputer(moda)    │
+  │ 2. StandardScaler()       │                             │ 2. OneHotEncoder(drop=1st)│
+  └────────────┬──────────────┘                             └────────────┬──────────────┘
+               │                                                         │
+               └────────────────────────────┬────────────────────────────┘
+                                            ▼
+                                ┌──────────────────────┐
+                                │  LogisticRegression  │
+                                └──────────────────────┘
